@@ -1,0 +1,14 @@
+langchain
+langchain-core
+langchain-community
+sentence-transformers
+faiss-cpu
+chromadb
+python_dotenv
+langchain-sarvam-integration
+langchain-exa
+langchain-tavily
+ipykernel
+streamlit
+fastapi
+uvicorn
