@@ -1,0 +1,86 @@
+
+
+```gitignore
+# -----------------------------
+# 🔐 Environment & Secrets
+# -----------------------------
+.env
+*.env
+.env.*
+
+# -----------------------------
+# 🐍 Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# -----------------------------
+# 📦 Dependencies / Packaging
+# -----------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# -----------------------------
+# 🧪 Testing / Coverage
+# -----------------------------
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# -----------------------------
+# 🧠 Model / Embeddings / Data
+# -----------------------------
+data/
+fetched_data/
+*.db
+*.sqlite3
+
+# ChromaDB persistence
+vector_database/
+
+# -----------------------------
+# 📄 Logs & Temp Files
+# -----------------------------
+*.log
+*.tmp
+*.swp
+.DS_Store
+
+# -----------------------------
+# ⚡ Streamlit
+# -----------------------------
+.streamlit/
+
+# -----------------------------
+# 🧑‍💻 IDE / Editor
+# -----------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# -----------------------------
+# 🖥️ OS Files
+# -----------------------------
+Thumbs.db
+
+# -----------------------------
+# 🚀 Misc
+# -----------------------------
+*.bak
+*.cache
+```
+
+---
+
