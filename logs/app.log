@@ -1,0 +1,38 @@
+2026-04-03 12:17:10 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 12:17:10 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 12:17:12 | INFO     | work_space.vector_db | Vector Store Initialized Text_Document
+2026-04-03 12:17:12 | DEBUG    | work_space.vector_db | Existing Document in Collection 3281
+2026-04-03 12:17:50 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 12:18:15 | INFO     | work_space.embedding_manager | 118 Embeddings generated
+2026-04-03 12:18:16 | INFO     | work_space.vector_db | 118 documents added to ChromaDB
+2026-04-03 12:19:03 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 12:19:03 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 12:19:03 | INFO     | work_space.vector_db | Vector Store Initialized Text_Document
+2026-04-03 12:19:03 | DEBUG    | work_space.vector_db | Existing Document in Collection 3399
+2026-04-03 12:19:25 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 12:19:54 | INFO     | work_space.embedding_manager | 118 Embeddings generated
+2026-04-03 12:19:56 | INFO     | work_space.vector_db | 118 documents added to ChromaDB
+2026-04-03 12:25:08 | INFO     | backend | Incoming query: "Describe the fundamental concepts, syntax, and ap...
+2026-04-03 12:25:08 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 12:25:08 | INFO     | work_space.embedding_manager | 1 Embeddings generated
+2026-04-03 12:25:16 | INFO     | backend | Query answered successfully
+2026-04-03 13:27:07 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:07 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:11 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:11 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:11 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 13:27:11 | INFO     | work_space.embedding_manager | 4 Embeddings generated
+2026-04-03 13:27:15 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:15 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:15 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 13:27:15 | INFO     | work_space.embedding_manager | 1 Embeddings generated
+2026-04-03 13:27:19 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:19 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:19 | WARNING  | work_space.embedding_manager | Empty text list passed to generate_embeddings
+2026-04-03 13:27:23 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:23 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:23 | DEBUG    | work_space.embedding_manager | Generating Embeddings
+2026-04-03 13:27:23 | INFO     | work_space.embedding_manager | 1 Embeddings generated
+2026-04-03 13:27:28 | INFO     | work_space.embedding_manager | Model Loaded: BAAI/bge-small-en-v1.5
+2026-04-03 13:27:28 | DEBUG    | work_space.embedding_manager | Model Dimensions: 384
+2026-04-03 13:27:28 | CRITICAL | work_space.embedding_manager | Model file not found: ANUU/nonexistant-model
