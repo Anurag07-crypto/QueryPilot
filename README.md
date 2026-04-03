@@ -1,93 +1,133 @@
-# 🤖 Modern RAG Chatbot (QueryPilot)
+# 🤖 Modern RAG Chatbot — QueryPilot
 
-A production-style **Retrieval-Augmented Generation (RAG)** chatbot built with **FastAPI, Streamlit, ChromaDB, and Sentence Transformers**, enhanced with **caching** and **web fallback search**.
+A production-grade **Retrieval-Augmented Generation (RAG)** system built with **FastAPI, Streamlit, ChromaDB, and Sentence Transformers**, enhanced with **query rewriting, intelligent caching, logging, testing, and robust error handling**.
+
+This project is designed as a **real-world AI system**, focusing not only on accuracy but also on **scalability, maintainability, and reliability**.
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-* 🔍 **Semantic Search (RAG)** using embeddings + vector database
-* 🌐 **Web Search Fallback** (Tavily API) when no relevant docs found
-* ⚡ **Query Caching (TTL-based)** for faster repeated responses
-* 🧠 **LLM Integration** using Sarvam AI
-* 📦 **Persistent Vector Database** (ChromaDB)
-* 💬 **Clean Chat UI** using Streamlit
-* 🔄 **End-to-End Pipeline** from ingestion → retrieval → generation
+### 🧠 Core Intelligence
+
+* 🔍 **Semantic Search (RAG)** using embeddings + ChromaDB
+* ✍️ **Query Rewriting Layer** → improves retrieval quality
+* 🌐 **Web Search Fallback (Tavily API)**
+* 🤖 **LLM Integration (Sarvam AI)**
+
+---
+
+### ⚡ Performance Optimization
+
+* ⚡ **TTL-Based Query Caching**
+* 🌐 **Web Cache** for API efficiency
+* 🧩 Optimized pipeline to reduce latency
+
+---
+
+### 🏗️ Software Engineering Enhancements (NEW 🔥)
+
+* 🧼 **Clean Code Structure**
+
+  * Modular design (`agent`, `retriever`, `vector_db`, etc.)
+  * Separation of concerns across layers
+  * Maintainable and extensible architecture
+
+* 🪵 **Logging System**
+
+  * Centralized logging module (`logger.py`)
+  * Tracks pipeline flow, errors, and debugging info
+  * Helps in monitoring and debugging production issues
+
+* 🧪 **Testing Suite (Pytest)**
+
+  * Unit tests for:
+
+    * Backend API
+    * Embedding Manager
+    * Vector DB
+  * Ensures system reliability and prevents regressions
+
+* ⚠️ **Robust Error Handling**
+
+  * Graceful failure handling across pipeline
+  * API-level exception handling
+  * Prevents system crashes and improves user experience
 
 ---
 
 ## 🏗️ Architecture Overview
 
-```
+```id="flow123"
 User (Streamlit UI)
         ↓
-FastAPI Backend
+FastAPI Backend (/chat)
+        ↓
+    Query Rewriting
         ↓
      my_agent()
         ↓
- ┌───────────────┐
- │ Query Cache   │
- └──────┬────────┘
-        ↓
-   Retriever (RAG)
-        ↓
-Vector DB (ChromaDB)
-        ↓
-  Docs Found?
-   /     \
- YES      NO
- ↓         ↓
-Context   Web Search (Tavily)
-   \       /
-    ↓     ↓
-     LLM (Sarvam)
-        ↓
-   Final Response
+ ┌───────────────────────┐
+ │   Query Cache (TTL)   │
+ └──────────┬────────────┘
+            ↓
+      Retriever (RAG)
+            ↓
+     Vector DB (ChromaDB)
+            ↓
+       Docs Found?
+        /     \
+      YES      NO
+       ↓        ↓
+   Context   Web Search (Tavily)
+       \        /
+        ↓      ↓
+     LLM (Sarvam AI)
+            ↓
+     Final Response
+            ↓
+        Logging + Cache
 ```
 
 ---
 
 ## 📂 Project Structure
 
-```
-work_space/
+```id="projx99"
+root/
 │
-├── agent.py              # Core logic (RAG + cache + LLM)
-├── retriever.py          # Retrieval logic
-├── vector_db.py          # ChromaDB integration
-├── embedding_manager.py  # Embedding generation
-├── data_ingestion.py     # Load + split documents
+├── work_space/
+│   ├── agent.py
+│   ├── retriever.py
+│   ├── vector_db.py
+│   ├── embedding_manager.py
+│   ├── data_ingestion.py
+│   ├── logger.py              # Logging system
 │
-server/
-├── backend.py            # FastAPI server
-├── app.py                # Streamlit UI
+├── server/
+│   ├── backend.py             # FastAPI API
+│   ├── app.py                 # Streamlit UI
 │
-fetched_data/
-└── text_docs/            # Stored documents & web results
+├── tests/
+│   ├── test_backend.py
+│   ├── test_embedding_manager.py
+│   ├── test_vector_db.py
+│
+├── fetched_data/              # Stored docs + web results
+├── logs/                      # Log files
+├── .env
+├── README.md
 ```
 
 ---
 
 ## ⚙️ Installation
 
-### 1. Clone Repository
-
-```bash
+```bash id="ins1"
 git clone <your-repo-url>
 cd <your-project>
-```
-
-### 2. Create Virtual Environment
-
-```bash
 python -m venv .venv
-source .venv/bin/activate   # Mac/Linux
 .venv\Scripts\activate      # Windows
-```
-
-### 3. Install Dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
@@ -95,61 +135,35 @@ pip install -r requirements.txt
 
 ## 🔑 Environment Variables
 
-Create a `.env` file:
-
 ```
-SARVAM_API_KEY=your_sarvam_key
-TAVILY_API_KEY=your_tavily_key
+SARVAM_API_KEY=your_key
+TAVILY_API_KEY=your_key
 ```
 
 ---
 
 ## ▶️ Running the Project
 
-### 1. Start Backend (FastAPI)
+### Backend
 
-```bash
-cd backend
+```bash id="run1"
+cd server
 python backend.py
 ```
 
-Server runs at:
+### Frontend
 
-```
-http://127.0.0.1:8000
-```
-
----
-
-### 2. Start Frontend (Streamlit)
-
-```bash
-cd frontend
+```bash id="run2"
 streamlit run app.py
 ```
 
 ---
 
-## 🔄 How It Works
+## 🧪 Running Tests
 
-### 1. Data Ingestion
-
-* Loads `.txt` files
-* Splits into chunks
-* Converts into embeddings
-* Stores in ChromaDB
-
----
-
-### 2. Query Flow
-
-1. User sends query
-2. Query cache checked
-3. Retriever searches vector DB
-4. If no results → web search
-5. Context passed to LLM
-6. Response generated
-7. Stored in cache
+```bash id="test1"
+pytest tests/
+```
 
 ---
 
@@ -162,44 +176,48 @@ streamlit run app.py
 
 ---
 
-## 📌 Key Technologies
+## 📌 Tech Stack
 
-* **FastAPI** → Backend API
-* **Streamlit** → UI
-* **ChromaDB** → Vector storage
-* **Sentence Transformers** → Embeddings
-* **Sarvam AI** → LLM
-* **Tavily API** → Web search
+* FastAPI
+* Streamlit
+* ChromaDB
+* Sentence Transformers
+* Sarvam AI
+* Tavily API
+* Pytest
 
 ---
 
 ## ⚡ Future Improvements
 
-* 🔥 Add **reranker (cross-encoder)**
-* 🧠 Implement **chat memory (context-aware RAG)**
-* ⚡ Use **Redis for caching**
-* 📊 Add **observability (logs + metrics)**
-* 🔀 Hybrid search (keyword + semantic)
-* 🧩 Multi-agent system
+* 🔥 Cross-Encoder Reranker
+* 🧠 Conversational Memory
+* ⚡ Redis Caching
+* 📊 Observability (Prometheus + Grafana)
+* 🔀 Hybrid Search (BM25 + Semantic)
+* 🧩 Multi-Agent System
 
 ---
 
 ## 🧑‍💻 Author
 
-Built with 💡 by an AI engineer on a mission to create intelligent systems.
+Built with 💡 by an AI engineer focused on **real-world system design + intelligent applications**.
 
 ---
 
 ## ⭐ Final Note
 
 This is not just a chatbot —
-it’s a **mini AI system architecture** combining:
+it’s a **production-style AI system** combining:
 
 * Retrieval
-* Reasoning
-* External knowledge
-* Performance optimization
+* Query Optimization
+* Fault Tolerance
+* Testing
+* Logging
+* Performance Engineering
 
 ---
 
-If you’re building on top of this, you’re already thinking like a **real AI engineer** 🚀
+If you're building systems like this, you're already thinking beyond tutorials —
+you're thinking like an **AI systems engineer** 🚀
