@@ -1,6 +1,13 @@
 import streamlit as st
 import requests
+import os  
+from langchain_groq import ChatGroq
+from pathlib import Path
+from dotenv import load_dotenv
 
+env_path = Path("C:/Users/Lenovo/Desktop/your_need/work_space/.env")
+load_dotenv(env_path)
+os.getenv("GROQ_API_KEY")
 # -------------------- CONFIG --------------------
 st.set_page_config(
     page_title="RAG Chatbot",
@@ -56,28 +63,38 @@ with chat_container:
 
 # -------------------- INPUT --------------------
 query = st.chat_input("Type your message...")
-
+# -------------------- QUERY REWRITING --------------------
+llm = ChatGroq(model="llama-3.1-8b-instant")
+PROMPT = f''' 
+You are a Professional prompt engineer with over 5 years plus experience, 
+Rewrite this query into a professional RAG prompt
+{query}
+Only give me rewrited prompt in the output
+'''
 # -------------------- HANDLE INPUT --------------------
 if query:
-    # Add user message
-    st.session_state.chat_history.append({"role": "user", "content": query})
-
+    response = llm.invoke(PROMPT)
+    rewrite_query = response.content
     with st.spinner("Thinking... 🧠"):
-        try:
-            res = requests.post(
-                "http://127.0.0.1:8000/chat",
-                json={"query": query},
-                timeout=30
-            )
+        if rewrite_query:
+            # Add user message
+            st.session_state.chat_history.append({"role": "user", "content": query})
 
-            if res.status_code == 200:
-                data = res.json()
-                response = data.get("response", "No response from server")
-            else:
-                response = f"❌ Error: {res.text}"
+            try:
+                res = requests.post(
+                    "http://127.0.0.1:8000/chat",
+                    json={"query": rewrite_query},
+                    timeout=500
+                )
 
-        except Exception as e:
-            response = f"⚠️ Connection error: {str(e)}"
+                if res.status_code == 200:
+                    data = res.json()
+                    response = data.get("response", "No response from server")
+                else:
+                    response = f"❌ Error: {res.text}"
+
+            except Exception as e:
+                response = f"⚠️ Connection error: {str(e)}"
 
     # Add bot response
     st.session_state.chat_history.append({"role": "assistant", "content": response})
