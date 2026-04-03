@@ -1,12 +1,12 @@
 from .vector_db import VectorStore
-from .embedding_manager import Embedding_manager
+from .embedding_manager import EmbeddingManager
 from typing import List, Any, Dict
-# ////////////////////////////////////////////////////////
+
 class Retriever:
-    def __init__(self, embedding_manager:Embedding_manager, vector_store:VectorStore):
+    def __init__(self, embedding_manager:EmbeddingManager, vector_store:VectorStore):
         self.embedding_manager = embedding_manager
         self.vector_store = vector_store
-    def retrieve(self, query:str, top_k:int=5, threshold:float = 0.5) -> List[Dict[str, Any]]:
+    def retrieve(self, query:str, top_k:int=5, threshold:float = 0.2) -> List[Dict[str, Any]]:
         try:
             query_embedding = self.embedding_manager.generate_embeddings([query])[0]
             results = self.vector_store.collection.query(
