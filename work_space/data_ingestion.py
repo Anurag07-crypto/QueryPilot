@@ -1,8 +1,8 @@
-# //////////////////////////////////////////////
+
 from langchain_community.document_loaders import DirectoryLoader, TextLoader, UnstructuredFileLoader
 from pathlib import Path
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-# //////////////////////////////////////////////
+
 # Use absolute path based on script location for reliable loading
 def load_documents():
     path = Path(__file__).parent.parent / "fetched_data" / "text_docs"
@@ -13,7 +13,7 @@ def load_documents():
 )
     return Dir_loader.load()
 
-# //////////////////////////////////////////////
+
 def splitter(documents, chunk_size:int = 1000, chunk_overlap:int = 200):
 
     text_splitter = RecursiveCharacterTextSplitter(
@@ -24,4 +24,3 @@ def splitter(documents, chunk_size:int = 1000, chunk_overlap:int = 200):
     )
     split_docs = text_splitter.split_documents(documents)
     return split_docs
-# //////////////////////////////////////////////
