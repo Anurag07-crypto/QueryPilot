@@ -1,6 +1,6 @@
 from .data_ingestion import splitter
 from .vector_db import VectorStore
-from .embedding_manager import Embedding_manager
+from .embedding_manager import EmbeddingManager
 from .retriever import Retriever
 from sarvamai import SarvamAI
 import os
@@ -11,10 +11,10 @@ import uuid
 import time
 from pathlib import Path
 from .data_ingestion import load_documents
-# ////////////////////////////////////////////////////////////////////////
+
 QUERY_TTL = 3600        # 1 hour
 WEB_TTL = 1800          # 30 minutes
-# ////////////////////////////////////////////////////////////////////////
+
 load_dotenv(Path(__file__).parent / ".env")
 sarvam_api_key=os.getenv("SARVAM_API_KEY")
 tavily_api_key=os.getenv("TAVILY_API_KEY")
@@ -22,14 +22,14 @@ tavily_api_key=os.getenv("TAVILY_API_KEY")
 if not sarvam_api_key or not tavily_api_key :
     raise ValueError("API_KEY environment variable is not set")
 
-# ////////////////////////////////////////////////////////////////////
+
 client = SarvamAI(api_subscription_key=sarvam_api_key)
 tavily = TavilySearch(max_results=5)
 exa = ExaSearchResults()
-# ////////////////////////////////////////////////////////////////////////
-embedding_manager = Embedding_manager()
+
+embedding_manager = EmbeddingManager()
 vector_store = VectorStore()
-# ////////////////////////////////////////////////////////////////////////
+
 WEB_CACHE = {}
 def web_search(query):
     if query in WEB_CACHE:
@@ -39,22 +39,29 @@ def web_search(query):
         else:
             print("QUERY CACHE OUTDATED")
             del WEB_CACHE[query]
+            
+    try:
+        tavily_result = tavily.invoke(query)
+        if not tavily_result.get("results"):
+            print(f"Web search no result found {query}")
+            return ""
+        tavily_text = "\n\n".join([r["content"] for r in tavily_result["results"]]) if tavily_result.get("results") else ""
+        WEB_CACHE[query] = {
+            "answer":tavily_text,
+            "time_stamp":time.time()
+            }
+        # Use absolute paths relative to this file
+        docs_dir = Path(__file__).parent.parent / "fetched_data" / "text_docs"
+        docs_dir.mkdir(parents=True, exist_ok=True)
+        
+        tavily_path = docs_dir / f"tavily_results_{uuid.uuid4()}.txt"
+        with open(tavily_path, "w", encoding="utf-8") as f:
+            f.write(tavily_text)
+        return tavily_text
+    except Exception as e:
+        print(f"Web Search failed, returning empty: {e}")
+        return ""
 
-    tavily_result = tavily.invoke(query)
-    tavily_text = "\n\n".join([r["content"] for r in tavily_result["results"]]) if tavily_result.get("results") else ""
-    WEB_CACHE[query] = {
-        "answer":tavily_text,
-        "time_stamp":time.time()
-        }
-    # Use absolute paths relative to this file
-    docs_dir = Path(__file__).parent.parent / "fetched_data" / "text_docs"
-    docs_dir.mkdir(parents=True, exist_ok=True)
-    
-    tavily_path = docs_dir / f"tavily_results_{uuid.uuid4()}.txt"
-    with open(tavily_path, "w", encoding="utf-8") as f:
-        f.write(tavily_text)
-    return tavily_text
-# ////////////////////////////////////////////////////////////////////////
 DATA_LOADED = False
 def initialize_loader():
     
@@ -73,15 +80,14 @@ def initialize_loader():
 retriever = initialize_loader()
 
 retriever = Retriever(embedding_manager, vector_store)
-# ------------------------------------------------------------------------
+
 def is_valid(cache_entry, ttl):
     return (time.time() - cache_entry["time_stamp"]) < ttl
 
-# ------------------------------------------------------------------------
 QUERY_CACHE = {}
 
 def my_agent(query,client=client):
-    
+        
     if query in QUERY_CACHE:
         if is_valid(QUERY_CACHE[query], QUERY_TTL):
             print("QUERY CACHE HIT")
@@ -89,12 +95,14 @@ def my_agent(query,client=client):
         else:
             print("QUERY CACHE OUTDATED")
             del QUERY_CACHE[query]
+
     
     context = retriever.retrieve(query=query)
     if not context:
         web_context = web_search(query=query)
         context = web_context
     context_text = "\n\n".join([doc["content"] for doc in context]) if isinstance(context, list) else str(context)
+    
     prompt = f"""
 You are an AI assistant.
 
@@ -102,6 +110,7 @@ IMPORTANT:
 - Do NOT include reasoning steps
 - Do NOT explain your thinking
 - ONLY return final answer
+- Make sure do major things in bullet points
 
 Context:
 {context_text}
@@ -109,7 +118,7 @@ Context:
 Question:
 {query}
 """
-    
+
     response = client.chat.completions(
             model="sarvam-105b",
             messages=[
@@ -134,5 +143,3 @@ Question:
 
     return final_answer.strip()
 
-
-# ////////////////////////////////////////////////////////////////////
